@@ -1,0 +1,126 @@
+1)нужно установить postgres и создать бд с такими х-ками Port=5432;User Id=postgres;Password=perFecTpRomE;Database=postgres;
+2)при запуске reload data - для обновления(загрузки) всех данных в бд(нужно подключение к инету)
+3)на каждой странице (кроме главной) кнопка back
+
+
+
+
+
+
+
+
+
+
+Использование: add rule name=<строка>
+      dir=in|out
+      action=allow|block|bypass
+      [program=<путь_к_программе>]
+      [service=<короткое_имя_службы>|any]
+      [description=<строка>]
+      [enable=yes|no (по умолчанию - yes)]
+      [profile=public|private|domain|any[,...]]
+      [localip=any|<IPv4-адрес>|<IPv6-адрес>|<подсеть>|<диапазон>|<список>]
+      [remoteip=any|localsubnet|dns|dhcp|wins|defaultgateway|
+         <IPv4-адрес>|<IPv6-адрес>|<подсеть>|<диапазон>|<список>]
+      [localport=0-65535||<диапазон_портов>[,...]|RPC|RPC-EPMap|IPHTTPS|any
+       (по умолчанию - any)]
+      [remoteport=0-65535|<диапазон_портов>[,...]|any (по умолчанию - any)]
+      [protocol=0-255|icmpv4|icmpv6|icmpv4:тип,код|icmpv6:тип,код|
+         tcp|udp|any (по умолчанию - any)]
+      [interfacetype=wireless|lan|ras|any]
+      [rmtcomputergrp=<строка_SDDL>]
+      [rmtusrgrp=<строка_SDDL>]
+      [edge=yes|deferapp|deferuser|no (по умолчанию - no)]
+      [security=authenticate|authenc|authdynenc|authnoencap|notrequired
+       (по умолчанию - notrequired)]
+
+Примечания:
+
+      - Добавляет новое правило входящего или исходящего трафика в политику
+        брандмауэра.
+      - Имя правила должно быть уникальным и не может быть равно all.
+      - Если указана удаленная группа пользователей или компьютеров,
+        для параметра security необходимо установить значение authenticate,
+        authenc, authdynenc или authnoencap.
+      - Установка authdynenc в качестве значения параметра security позволяет
+        системам динамически согласовывать использование шифрования трафика,
+        соответствующего данному правилу брандмауэра Защитника Windows.
+        Шифрование согласуется в соответствии со свойствами существующего
+        правила безопасности соединения. Этот параметр позволяет компьютеру
+        принять первый TCP- или UDP-пакет входящего соединения IPsec,
+        если он защищен, но не зашифрован, с помощью IPsec.
+        Как только первый пакет будет обработан, сервер повторно
+        согласует подключение и обновит его, чтобы все последующие соединения
+        были полностью зашифрованы.
+      - Если action=bypass, должна быть указана группа удаленных компьютеров,
+        когда dir=in.
+      - Если service=any, правило действует только для служб.
+      - Значением кода или типа ICMP может быть any.
+      - Параметр edge можно указывать только для правил входящего трафика.
+      - AuthEnc и authnoencap нельзя использовать вместе.
+        Параметр Authdynenc допустим только в том случае, если dir=in.
+     -  Если задан параметр authnoencap, то параметр security=authenticate
+        становится необязательным.
+
+Примеры.
+
+      Добавление правила для входящего трафика без безопасности инкапсуляции
+      для browser.exe:
+      netsh advfirewall firewall add rule name="allow browser"
+      dir=in program="c:\programfiles\browser\browser.exe"
+      security=authnoencap action=allow
+
+      Добавление правила исходящего трафика для порта 80:
+      netsh advfirewall firewall add rule name="allow80"
+      protocol=TCP dir=out localport=80 action=block
+
+      Добавление правила входящего трафика с требованием безопасности и
+      шифрования для трафика через TCP-порт 80:
+      netsh advfirewall firewall add rule
+      name="Require Encryption for Inbound TCP/80"
+      protocol=TCP dir=in localport=80 security=authdynenc
+      action=allow
+
+      Добавление правила входящего трафика для browser.exe с требованием
+      безопасности:
+      netsh advfirewall firewall add rule name="allow browser"
+      dir=in program="c:\program files\browser\browser.exe"
+      security=authenticate action=allow
+
+      Добавление правила обхода брандмауэра с проверкой подлинности для
+      группы acmedomain\scanners, определяемой строкой SDDL:
+      netsh advfirewall firewall add rule name="allow scanners"
+      dir=in rmtcomputergrp=<строка_SDDL> action=bypass
+      security=authenticate
+
+      Добавление правила разрешения исходящего трафика для локальных портов
+      5000-5010 для udp:
+      Add rule name="Allow port range" dir=out protocol=udp
+      localport=5000-5010 action=allow
+
+
+
+
+netsh advfirewall firewall show rule status=enabled name=all
+
+
+
+
+and this will show you a list of all the enabled rules you have setup. 
+Find the "name" of the applicable rule for uTorrent and then rule the 
+command like I listed in the above comment but with the rule name where that is supposed to be. –
+
+
+
+add
+
+netsh advfirewall firewall add rule name="Open Remote Desktop" protocol=TCP dir=in localport=6666 action=allow
+
+
+
+
+delete
+
+netsh advfirewall firewall delete rule name="<Rule Name>"
+
+
